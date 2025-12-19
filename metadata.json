@@ -1,0 +1,7 @@
+{
+  "name": "Worksite MVP Prototype",
+  "description": "A high-fidelity project management platform for homeowners and contractors, featuring a dual-mode interface, escrow-style payments, and transparency tools for the home improvement industry.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
