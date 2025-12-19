@@ -1,0 +1,314 @@
+/* WORKSITE - Professional & Distinctive Theme */
+/* Warm, crafted aesthetic with copper accents and subtle texture */
+
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Outfit:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Warm Neutral Palette - "Paper & Stone" */
+  --stone-950: #1c1917;
+  --stone-900: #292524;
+  --stone-800: #44403c;
+  --stone-600: #57534e;
+  --stone-500: #78716c;
+  --stone-400: #a8a29e;
+  --stone-200: #e7e5e4;
+  --stone-100: #f5f5f4;
+  --stone-50: #fafaf9;
+
+  --cream-100: #fdfbf7;
+  --cream-50: #fffefc;
+  --white: #ffffff;
+
+  /* Copper/Amber - Distinctive Primary Accent */
+  --copper-700: #9a3412;
+  --copper-600: #c2410c;
+  --copper-500: #ea580c;
+  /* Primary Action */
+  --copper-400: #fb923c;
+  --copper-100: #ffedd5;
+  --copper-50: #fff7ed;
+
+  /* Functional Colors */
+  --ink-900: #0f172a;
+  /* High contrast text */
+  --success-600: #059669;
+  --success-100: #ecfdf5;
+  --info-600: #2563eb;
+  --info-100: #eff6ff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--cream-100);
+  background-image:
+    linear-gradient(45deg, var(--stone-200) 25%, transparent 25%, transparent 75%, var(--stone-200) 75%, var(--stone-200)),
+    linear-gradient(45deg, var(--stone-200) 25%, transparent 25%, transparent 75%, var(--stone-200) 75%, var(--stone-200));
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+  background-blend-mode: multiply;
+  /* Make pattern extremely subtle */
+  background: var(--cream-100);
+  /* Fallback: using a subtle texture via radial gradient for depth */
+  background-image: radial-gradient(circle at 50% 0%, #fff 0%, var(--cream-100) 70%);
+  color: var(--stone-800);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography w/ Character */
+h1,
+h2,
+h3,
+.heading-font {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  color: var(--ink-900);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-weight: 700;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+/* Distinctive Cards - "clean paper" feel */
+.card {
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.04),
+    0 4px 6px -2px rgba(0, 0, 0, 0.02);
+}
+
+/* Accent Bars - The "Construction Hint" */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.accent-bar {
+  width: 4px;
+  height: 24px;
+  background: var(--copper-500);
+  border-radius: 2px;
+  /* Diagonal stripe pattern for that subtle industrial feel */
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-size: 8px 8px;
+}
+
+/* Buttons - punchy and tactile */
+.btn {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary {
+  background: var(--copper-500);
+  color: white;
+  box-shadow: 0 2px 4px rgba(234, 88, 12, 0.2);
+}
+
+.btn-primary:hover {
+  background: var(--copper-600);
+  box-shadow: 0 4px 6px rgba(234, 88, 12, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--stone-600);
+  border: 1px solid var(--stone-200);
+  border-bottom: 2px solid var(--stone-200);
+}
+
+.btn-secondary:hover {
+  background: var(--stone-50);
+  color: var(--stone-800);
+  border-color: var(--stone-300);
+  transform: translateY(-1px);
+}
+
+/* Text Inputs - clean and warm focus */
+.input {
+  background: var(--stone-50);
+  border: 1px solid var(--stone-200);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-family: 'Outfit', sans-serif;
+  color: var(--ink-900);
+  transition: all 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  background: white;
+  border-color: var(--copper-500);
+  box-shadow: 0 0 0 3px var(--copper-100);
+}
+
+/* Badges - pill shaped, subtle */
+.badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+.badge-copper {
+  background: var(--copper-50);
+  color: var(--copper-700);
+  border: 1px solid var(--copper-100);
+}
+
+.badge-success {
+  background: var(--success-100);
+  color: var(--success-600);
+  border: 1px solid rgba(5, 150, 105, 0.1);
+}
+
+.badge-neutral {
+  background: var(--stone-100);
+  color: var(--stone-600);
+  border: 1px solid var(--stone-200);
+}
+
+/* Sidebar - Deep and professional */
+.sidebar {
+  background: var(--stone-900);
+  color: var(--stone-400);
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  margin-bottom: 0.25rem;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--stone-400);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-nav-item:hover {
+  color: var(--stone-100);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-nav-item.active {
+  background: linear-gradient(90deg, rgba(234, 88, 12, 0.15), transparent);
+  color: var(--copper-400);
+  font-weight: 600;
+  border-left: 3px solid var(--copper-500);
+  border-radius: 0 10px 10px 0;
+  /* Only round right side */
+}
+
+/* Animations - "Staggered Reveal" for Page Load */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-enter {
+  opacity: 0;
+  /* Start hidden */
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stagger delays */
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+/* Grid Layout Helper */
+.grid-gap {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .md-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .md-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--stone-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--stone-400);
+}

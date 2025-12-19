@@ -16,7 +16,7 @@ export const Messages: React.FC<MessagesProps> = ({ role }) => {
     const newMessage = {
       id: Date.now().toString(),
       senderId: role === 'HOMEOWNER' ? 'morgan' : 'c1',
-      senderName: role === 'HOMEOWNER' ? 'Morgan' : 'Precision Plumbing',
+      senderName: role === 'HOMEOWNER' ? 'Morgan' : 'C1',
       text: input,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       isMe: true,
@@ -26,50 +26,71 @@ export const Messages: React.FC<MessagesProps> = ({ role }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 h-[calc(100vh-180px)] lg:h-[calc(100vh-250px)] flex flex-col overflow-hidden">
-      <div className="p-4 border-b border-slate-100 flex items-center gap-4 bg-slate-50">
-        <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white shadow-sm font-bold text-sm">
-          {role === 'HOMEOWNER' ? 'PP' : 'M'}
+    <div className="card animate-enter delay-100" style={{ height: 'calc(100vh - 180px)', padding: 0, display: 'flex', overflow: 'hidden' }}>
+      {/* Sidebar List */}
+      <div style={{ width: '300px', borderRight: '1px solid var(--stone-200)', background: 'var(--stone-50)', display: 'none', flexDirection: 'column', '@media (min-width: 768px)': { display: 'flex' } } as any}>
+        <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--stone-200)' }}>
+          <h3 style={{ fontSize: '1.25rem' }}>Inbox</h3>
         </div>
-        <div>
-          <h3 className="font-bold text-slate-900 text-sm lg:text-base">{role === 'HOMEOWNER' ? 'Precision Plumbing' : 'Morgan (Client)'}</h3>
-          <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider flex items-center gap-1">
-            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Online
-          </p>
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4 bg-slate-50/30">
-        {messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.isMe ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] lg:max-w-[70%] p-3 lg:p-4 rounded-2xl text-sm ${msg.isMe ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white text-slate-700 shadow-sm border border-slate-100 rounded-tl-none'}`}>
-              {!msg.isMe && <p className="text-[10px] font-black uppercase text-indigo-400 mb-1">{msg.senderName}</p>}
-              <p className="leading-relaxed text-sm">{msg.text}</p>
-              <p className={`text-[9px] mt-2 ${msg.isMe ? 'text-indigo-200 text-right' : 'text-slate-400'}`}>{msg.timestamp}</p>
+        <div style={{ padding: '1rem' }}>
+          <div style={{ padding: '1rem', background: 'white', borderRadius: '12px', border: '1px solid var(--copper-200)', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+              <span style={{ fontWeight: 600 }}>{role === 'HOMEOWNER' ? 'Precision Plumbing' : 'Morgan Client'}</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--stone-400)' }}>2m</span>
             </div>
+            <p style={{ fontSize: '0.875rem', color: 'var(--stone-600)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {messages[messages.length - 1].text}
+            </p>
           </div>
-        ))}
+        </div>
       </div>
 
-      <div className="p-3 lg:p-4 border-t border-slate-100 bg-white">
-        <div className="flex gap-2">
-          <button className="hidden sm:flex w-10 h-10 items-center justify-center rounded-full text-slate-400 hover:bg-slate-50 transition">
-            <i className="fa-solid fa-plus"></i>
-          </button>
-          <input 
-            type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Type your message..." 
-            className="flex-1 px-4 py-2 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-          />
-          <button 
-            onClick={handleSend}
-            className="w-10 h-10 rounded-full bg-indigo-600 text-white shadow-md shadow-indigo-200 hover:bg-indigo-700 transition shrink-0"
-          >
-            <i className="fa-solid fa-paper-plane text-xs"></i>
-          </button>
+      {/* Main Chat */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--stone-200)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--copper-100)', color: 'var(--copper-700)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
+            {role === 'HOMEOWNER' ? 'PP' : 'MC'}
+          </div>
+          <div>
+            <h4 style={{ fontSize: '1rem', fontWeight: 600 }}>{role === 'HOMEOWNER' ? 'Precision Plumbing' : 'Morgan Client'}</h4>
+            <p style={{ fontSize: '0.75rem', color: 'var(--success-600)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--success-500)' }}></span>
+              Online now
+            </p>
+          </div>
+        </div>
+
+        <div style={{ flex: 1, padding: '1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', background: 'var(--white)' }}>
+          {messages.map((msg) => (
+            <div key={msg.id} style={{ display: 'flex', justifyContent: msg.isMe ? 'flex-end' : 'flex-start' }}>
+              <div style={{
+                maxWidth: '70%',
+                padding: '0.875rem 1.25rem',
+                borderRadius: msg.isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                background: msg.isMe ? 'var(--copper-500)' : 'var(--stone-100)',
+                color: msg.isMe ? 'white' : 'var(--ink-900)',
+                lineHeight: 1.5
+              }}>
+                <p>{msg.text}</p>
+                <p style={{ fontSize: '0.6875rem', marginTop: '0.25rem', opacity: 0.7, textAlign: 'right' }}>{msg.timestamp}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ padding: '1.25rem', borderTop: '1px solid var(--stone-200)' }}>
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <button className="btn btn-secondary" style={{ padding: '0.75rem' }}><i className="fa-solid fa-paperclip"></i></button>
+            <input
+              className="input"
+              style={{ flex: 1 }}
+              placeholder="Type your message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            />
+            <button className="btn btn-primary" onClick={handleSend}><i className="fa-solid fa-paper-plane"></i></button>
+          </div>
         </div>
       </div>
     </div>

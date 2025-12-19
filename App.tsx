@@ -20,7 +20,7 @@ const App: React.FC = () => {
   const handleApproveMilestone = useCallback((milestoneId: string) => {
     setProject(prev => ({
       ...prev,
-      milestones: prev.milestones.map(m => 
+      milestones: prev.milestones.map(m =>
         m.id === milestoneId ? { ...m, status: 'RELEASED' } : m
       )
     }));
@@ -29,242 +29,252 @@ const App: React.FC = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
 
-  const switchTab = (tab: AppTab) => {
-    setActiveTab(tab);
-    closeSidebar();
-  };
+  // Key to force re-animation on tab switch
+  const contentKey = activeTab + role;
 
   const renderContent = () => {
-    if (activeTab === 'MARKETPLACE') return <Marketplace />;
-    if (activeTab === 'LEADS') return <LeadsPipeline />;
-    if (activeTab === 'MESSAGES') return <Messages role={role} />;
-    if (activeTab === 'TEAM') return <Team role={role} />;
-    
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-        {/* Left Column: Financials and Legal */}
-        <div className="lg:col-span-2 space-y-6 lg:space-y-8">
-          <FinancialEngine 
-            project={project} 
-            role={role} 
-            onApproveMilestone={handleApproveMilestone} 
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            <Contracts project={project} />
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center justify-between">
-                Project Timeline
-                <i className="fa-solid fa-calendar-days text-indigo-500"></i>
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-indigo-50 flex flex-col items-center justify-center text-indigo-600">
-                    <span className="text-[10px] font-bold uppercase">Mar</span>
-                    <span className="text-lg font-black">01</span>
-                  </div>
-                  <div>
-                    <p className="font-bold text-slate-800">Kickoff Date</p>
-                    <p className="text-xs text-slate-500">Mobilization & Safety Briefing</p>
-                  </div>
+    switch (activeTab) {
+      case 'MARKETPLACE': return <Marketplace />;
+      case 'LEADS': return <LeadsPipeline />;
+      case 'MESSAGES': return <Messages role={role} />;
+      case 'TEAM': return <Team role={role} />;
+      default:
+        return (
+          <div className="grid-gap" style={{ gridTemplateColumns: '1fr' }}>
+            {/* Main Financial Card - immediate load */}
+            <div className="animate-enter delay-100">
+              <FinancialEngine
+                project={project}
+                role={role}
+                onApproveMilestone={handleApproveMilestone}
+              />
+            </div>
+
+            {/* Split Row - slightly delayed */}
+            <div className="grid-gap md-cols-2 animate-enter delay-200">
+              <Contracts project={project} />
+              <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+                <div className="section-header">
+                  <div className="accent-bar"></div>
+                  <h2>Critical Path</h2>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-slate-50 flex flex-col items-center justify-center text-slate-400">
-                    <span className="text-[10px] font-bold uppercase">Apr</span>
-                    <span className="text-lg font-black">15</span>
+
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{
+                      width: '56px', height: '56px', borderRadius: '12px',
+                      background: 'var(--copper-50)', color: 'var(--copper-600)',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                      border: '1px solid var(--copper-100)'
+                    }}>
+                      <span style={{ fontSize: '0.6875rem', fontWeight: 700, textTransform: 'uppercase' }}>Mar</span>
+                      <span style={{ fontSize: '1.25rem', fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700 }}>01</span>
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 600 }}>Project Kickoff</h4>
+                      <p style={{ color: 'var(--stone-500)', fontSize: '0.875rem' }}>Mobilization & Safety Brief</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold text-slate-800">Target Completion</p>
-                    <p className="text-xs text-slate-500 text-emerald-600 font-semibold">On Track</p>
+
+                  <div style={{ height: '1px', background: 'var(--stone-200)', margin: '0 1rem' }}></div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{
+                      width: '56px', height: '56px', borderRadius: '12px',
+                      background: 'var(--stone-50)', color: 'var(--stone-400)',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                      border: '1px solid var(--stone-200)'
+                    }}>
+                      <span style={{ fontSize: '0.6875rem', fontWeight: 700, textTransform: 'uppercase' }}>Apr</span>
+                      <span style={{ fontSize: '1.25rem', fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700 }}>15</span>
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 600 }}>Target Completion</h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--success-600)' }}></span>
+                        <span style={{ color: 'var(--success-600)', fontSize: '0.875rem', fontWeight: 500 }}>On Schedule</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <button className="w-full mt-8 py-3 bg-slate-50 text-slate-600 font-bold text-sm rounded-lg hover:bg-slate-100 transition">
-                Full Shared Calendar
-              </button>
+            </div>
+
+            {/* Bottom Row - more delayed */}
+            <div className="grid-gap md-cols-2 animate-enter delay-300">
+              <ProgressFeed feed={project.progressFeed} role={role} />
+              <CostCalculator />
             </div>
           </div>
-        </div>
-
-        {/* Right Column: Feed and Tools */}
-        <div className="space-y-6 lg:space-y-8">
-          <ProgressFeed feed={project.progressFeed} role={role} />
-          <CostCalculator />
-        </div>
-      </div>
-    );
+        );
+    }
   };
 
+  const navItems = [
+    { id: 'DASHBOARD' as AppTab, label: 'Overview', icon: 'fa-chart-pie' },
+    ...(role === 'HOMEOWNER'
+      ? [{ id: 'MARKETPLACE' as AppTab, label: 'Marketplace', icon: 'fa-magnifying-glass' }]
+      : [{ id: 'LEADS' as AppTab, label: 'Lead Pipeline', icon: 'fa-bullseye' }]
+    ),
+    { id: 'MESSAGES' as AppTab, label: 'Messages', icon: 'fa-comments', badge: 3 },
+    { id: 'TEAM' as AppTab, label: 'Project Team', icon: 'fa-users-line' },
+  ];
+
   return (
-    <div className="flex min-h-screen relative overflow-x-hidden">
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--cream-100)' }}>
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden backdrop-blur-sm"
+        <div
           onClick={closeSidebar}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(28, 25, 23, 0.6)', backdropFilter: 'blur(2px)', zIndex: 40 }}
         />
       )}
 
-      {/* Responsive Sidebar */}
-      <aside className={`
-        w-64 bg-slate-900 text-white flex flex-col fixed h-full z-50 transition-transform duration-300 ease-in-out
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0
-      `}>
-        <div className="p-6 border-b border-slate-800 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-500 rounded flex items-center justify-center">
-              <i className="fa-solid fa-building-circle-check"></i>
+      {/* Sidebar */}
+      <aside className="sidebar" style={{
+        width: '280px',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'fixed',
+        height: '100%',
+        zIndex: 50,
+        transform: isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        borderRight: '1px solid rgba(255,255,255,0.05)'
+      }}>
+        <div style={{ padding: '2rem 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{
+              width: '40px', height: '40px',
+              background: 'linear-gradient(135deg, var(--copper-500), var(--copper-600))',
+              borderRadius: '10px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'white',
+              boxShadow: '0 4px 12px rgba(234, 88, 12, 0.3)'
+            }}>
+              <i className="fa-solid fa-layer-group" style={{ fontSize: '1.25rem' }}></i>
             </div>
-            <h1 className="text-2xl font-black tracking-tighter">WORKSITE</h1>
+            <div>
+              <h1 style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: '1.5rem', fontWeight: 700, color: 'var(--white)', lineHeight: 1 }}>Worksite</h1>
+              <p style={{ fontSize: '0.75rem', fontWeight: 500, opacity: 0.6, letterSpacing: '0.05em' }}>PRO</p>
+            </div>
           </div>
-          <button onClick={closeSidebar} className="lg:hidden text-slate-400 hover:text-white">
-            <i className="fa-solid fa-xmark text-xl"></i>
-          </button>
         </div>
 
-        <nav className="flex-1 p-4 space-y-6 overflow-y-auto">
-          <div>
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Core Platform</h3>
-            <div className="space-y-1">
-              <button 
-                onClick={() => switchTab('DASHBOARD')}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition text-sm font-semibold ${activeTab === 'DASHBOARD' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800'}`}
-              >
-                <i className="fa-solid fa-chart-line w-5 text-center"></i>
-                Dashboard
-              </button>
-              {role === 'HOMEOWNER' ? (
-                <button 
-                  onClick={() => switchTab('MARKETPLACE')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition text-sm font-semibold ${activeTab === 'MARKETPLACE' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800'}`}
-                >
-                  <i className="fa-solid fa-search w-5 text-center"></i>
-                  Marketplace
-                </button>
-              ) : (
-                <button 
-                  onClick={() => switchTab('LEADS')}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition text-sm font-semibold ${activeTab === 'LEADS' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800'}`}
-                >
-                  <i className="fa-solid fa-bullseye w-5 text-center"></i>
-                  Lead Center
-                </button>
+        <nav style={{ flex: 1, padding: '0 1rem' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--stone-600)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem', paddingLeft: '1rem' }}>Menu</p>
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              onClick={() => { setActiveTab(item.id); closeSidebar(); }}
+              className={`sidebar-nav-item ${activeTab === item.id ? 'active' : ''}`}
+            >
+              <i className={`fa-solid ${item.icon}`} style={{ width: '20px', textAlign: 'center' }}></i>
+              {item.label}
+              {item.badge && (
+                <span style={{
+                  marginLeft: 'auto',
+                  background: 'var(--copper-500)',
+                  color: 'white',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  padding: '0.125rem 0.5rem',
+                  borderRadius: '9999px',
+                  boxShadow: '0 2px 4px rgba(234, 88, 12, 0.25)'
+                }}>
+                  {item.badge}
+                </span>
               )}
-              <button 
-                onClick={() => switchTab('MESSAGES')}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition text-sm font-semibold ${activeTab === 'MESSAGES' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800'}`}
-              >
-                <i className="fa-solid fa-message w-5 text-center"></i>
-                Messages
-                <span className="ml-auto bg-rose-500 text-[10px] text-white px-1.5 rounded-full">3</span>
-              </button>
-              <button 
-                onClick={() => switchTab('TEAM')}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition text-sm font-semibold ${activeTab === 'TEAM' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800'}`}
-              >
-                <i className="fa-solid fa-people-group w-5 text-center"></i>
-                Project Team
-              </button>
-            </div>
-          </div>
-
-          <div className="pt-6 border-t border-slate-800">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Pitch Controls</h3>
-            <div className="space-y-2">
-              <button 
-                onClick={() => { setRole('HOMEOWNER'); switchTab('DASHBOARD'); }}
-                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition text-xs font-semibold ${role === 'HOMEOWNER' ? 'bg-slate-800 text-indigo-400 border border-indigo-500/50' : 'text-slate-500 hover:bg-slate-800'}`}
-              >
-                <i className="fa-solid fa-house-user"></i>
-                As Homeowner
-              </button>
-              <button 
-                onClick={() => { setRole('CONTRACTOR'); switchTab('DASHBOARD'); }}
-                className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition text-xs font-semibold ${role === 'CONTRACTOR' ? 'bg-slate-800 text-indigo-400 border border-indigo-500/50' : 'text-slate-500 hover:bg-slate-800'}`}
-              >
-                <i className="fa-solid fa-hammer"></i>
-                As Contractor
-              </button>
-            </div>
-          </div>
+            </button>
+          ))}
         </nav>
 
-        <div className="p-4 border-t border-slate-800 mt-auto">
-          <div className="p-4 bg-slate-800 rounded-xl">
-            <p className="text-xs font-bold text-slate-300 mb-2">Platform Fee</p>
-            <div className="flex items-center justify-between text-[10px] font-black uppercase text-indigo-400">
-              <span>Standard 5%</span>
-              <span className="bg-indigo-500/20 px-1.5 py-0.5 rounded italic">Locked</span>
+        <div style={{ padding: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--stone-400)' }}>CURRENT VIEW</span>
+              <span style={{ width: '8px', height: '8px', background: 'var(--success-600)', borderRadius: '50%', boxShadow: '0 0 8px rgba(5, 150, 105, 0.4)' }}></span>
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={() => setRole('HOMEOWNER')}
+                style={{ flex: 1, padding: '0.5rem', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600, background: role === 'HOMEOWNER' ? 'var(--stone-100)' : 'transparent', color: role === 'HOMEOWNER' ? 'var(--stone-900)' : 'var(--stone-500)' }}
+              >
+                Client
+              </button>
+              <button
+                onClick={() => setRole('CONTRACTOR')}
+                style={{ flex: 1, padding: '0.5rem', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600, background: role === 'CONTRACTOR' ? 'var(--stone-100)' : 'transparent', color: role === 'CONTRACTOR' ? 'var(--stone-900)' : 'var(--stone-500)' }}
+              >
+                Pro
+              </button>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 lg:ml-64 bg-slate-50 min-h-screen flex flex-col">
-        {/* Mobile Header */}
-        <header className="lg:hidden flex items-center justify-between p-4 bg-white border-b border-slate-200 sticky top-0 z-30">
-          <button onClick={toggleSidebar} className="w-10 h-10 flex items-center justify-center bg-slate-50 rounded-lg text-slate-600">
-            <i className="fa-solid fa-bars-staggered"></i>
-          </button>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-indigo-500 rounded flex items-center justify-center text-[10px] text-white">
-              <i className="fa-solid fa-building-circle-check"></i>
+      {/* Main Content */}
+      <main style={{ flex: 1, marginLeft: '0', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        {/* Header */}
+        <header style={{
+          padding: '1.5rem 2rem',
+          background: 'rgba(253, 251, 247, 0.8)',
+          backdropFilter: 'blur(12px)',
+          position: 'sticky', top: 0, zIndex: 30,
+          borderBottom: '1px solid rgba(0,0,0,0.03)',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <button onClick={toggleSidebar} className="btn-secondary lg:hidden" style={{ padding: '0.5rem', height: '40px', width: '40px', display: 'flex', justifyContent: 'center' }}>
+              <i className="fa-solid fa-bars"></i>
+            </button>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>
+                  {activeTab === 'DASHBOARD' ? 'Project Dashboard' :
+                    activeTab === 'MARKETPLACE' ? 'Marketplace' :
+                      activeTab === 'LEADS' ? 'Lead Pipeline' :
+                        activeTab === 'MESSAGES' ? 'Messages' : 'Project Team'}
+                </h2>
+                <span className="badge badge-copper" style={{ fontSize: '0.6875rem' }}>ACTIVE</span>
+              </div>
+              <p style={{ color: 'var(--stone-500)', fontSize: '0.875rem', marginTop: '0.25rem' }}>{project.projectTitle}</p>
             </div>
-            <span className="font-black tracking-tighter text-slate-900">WORKSITE</span>
           </div>
-          <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border border-slate-100 shadow-sm">
-             <img src={role === 'HOMEOWNER' ? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100' : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100'} alt="Avatar" />
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+            <div style={{ textAlign: 'right', display: 'none', flexDirection: 'column', '@media (min-width: 768px)': { display: 'flex' } } as any}>
+              <span style={{ fontSize: '0.9375rem', fontWeight: 600 }}>{role === 'HOMEOWNER' ? 'Morgan Client' : 'Precision Plumbing'}</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--stone-500)' }}>{role === 'HOMEOWNER' ? 'Homeowner' : 'Contractor'}</span>
+            </div>
+            <div style={{ width: '44px', height: '44px', borderRadius: '12px', overflow: 'hidden', border: '2px solid var(--white)', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <img
+                src={role === 'HOMEOWNER'
+                  ? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100'
+                  : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100'
+                }
+                alt="Avatar"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
           </div>
         </header>
 
-        <div className="p-4 lg:p-8 flex-1">
-          <header className="hidden lg:flex justify-between items-end mb-10">
-            <div>
-              <nav className="flex items-center gap-2 text-sm text-slate-400 mb-2">
-                <span>Worksite</span>
-                <i className="fa-solid fa-chevron-right text-[10px]"></i>
-                <span className="text-slate-600 font-medium capitalize">
-                  {activeTab.toLowerCase()}
-                </span>
-              </nav>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight">
-                {activeTab === 'DASHBOARD' ? (role === 'HOMEOWNER' ? 'My Project Hub' : 'Job Console') : 
-                 activeTab === 'MARKETPLACE' ? 'Build Your Dream Team' : 
-                 activeTab === 'LEADS' ? 'Scale Your Business' :
-                 activeTab === 'MESSAGES' ? 'Client Collaboration' : 'Project Crew'}
-              </h2>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-sm font-bold text-slate-900">{role === 'HOMEOWNER' ? project.clientName : 'Precision Plumbing'}</p>
-                <p className="text-xs text-slate-500">{role === 'HOMEOWNER' ? 'Homeowner' : 'Lead Specialist'}</p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-slate-200 border-2 border-white overflow-hidden shadow-sm">
-                <img src={role === 'HOMEOWNER' ? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100' : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100'} alt="Avatar" />
-              </div>
-            </div>
-          </header>
-
-          {/* Mobile-only page title */}
-          <div className="lg:hidden mb-6">
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-              {activeTab === 'DASHBOARD' ? (role === 'HOMEOWNER' ? 'My Project' : 'Job Console') : 
-               activeTab === 'MARKETPLACE' ? 'Marketplace' : 
-               activeTab === 'LEADS' ? 'Lead Center' :
-               activeTab === 'MESSAGES' ? 'Messages' : 'Project Team'}
-            </h2>
-            <p className="text-sm text-slate-500 font-medium">
-              {activeTab === 'DASHBOARD' ? project.projectTitle : 'Worksite v1.2'}
-            </p>
-          </div>
-
-          <div className="transition-all duration-300 animate-in fade-in slide-in-from-bottom-2">
+        {/* Scrollable Area */}
+        <div style={{ padding: '2rem', flex: 1, maxWidth: '1600px', width: '100%', margin: '0 auto' }}>
+          <div key={contentKey}>
             {renderContent()}
           </div>
         </div>
       </main>
+
+      <style>{`
+        @media (min-width: 1024px) {
+          .sidebar { transform: translateX(0) !important; }
+          main { margin-left: 280px !important; }
+          .lg\\:hidden { display: none !important; }
+        }
+      `}</style>
     </div>
   );
 };

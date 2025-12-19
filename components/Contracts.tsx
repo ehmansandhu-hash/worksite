@@ -8,50 +8,53 @@ interface ContractsProps {
 
 export const Contracts: React.FC<ContractsProps> = ({ project }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-slate-800">Legal & Safety</h2>
-        <i className="fa-solid fa-shield-halved text-indigo-500 text-xl"></i>
-      </div>
-
-      <div className="space-y-4">
-        <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-            <i className="fa-solid fa-file-signature"></i>
-          </div>
-          <div className="flex-1">
-            <p className="font-bold text-emerald-900">Master Service Agreement</p>
-            <p className="text-xs text-emerald-700 uppercase font-semibold">Status: Signed & Verified</p>
-          </div>
-          <button className="text-emerald-700 hover:underline text-sm font-medium">View PDF</button>
-        </div>
-
-        <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
-            <i className="fa-solid fa-file-shield"></i>
-          </div>
-          <div className="flex-1">
-            <p className="font-bold text-slate-700">Insurance Certificate (COI)</p>
-            <p className="text-xs text-slate-500 uppercase font-semibold">Valid until: 12/2024</p>
-          </div>
-          <button className="text-indigo-600 hover:underline text-sm font-medium">View PDF</button>
-        </div>
-
-        <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
-            <i className="fa-solid fa-gavel"></i>
-          </div>
-          <div className="flex-1">
-            <p className="font-bold text-slate-700">Lien Waiver - Milestone 2</p>
-            <p className="text-xs text-slate-500 uppercase font-semibold">Pending completion</p>
-          </div>
-          <button className="text-indigo-600 hover:underline text-sm font-medium">Review</button>
+    <div className="card" style={{ padding: '0', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--stone-100)' }}>
+        <div className="section-header" style={{ marginBottom: 0 }}>
+          <div className="accent-bar"></div>
+          <h2>Approvals & Safety</h2>
         </div>
       </div>
-      
-      <div className="mt-6 p-4 bg-indigo-50 rounded-lg text-xs text-indigo-800 border border-indigo-100">
-        <p className="font-bold mb-1"><i className="fa-solid fa-circle-info mr-1"></i> Worksite Guarantee</p>
-        All projects on Worksite are covered by our $50,000 protection policy against contractor abandonment or verified quality defects.
+
+      <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {[
+          { icon: 'fa-file-contract', title: 'Master Service Agreement', status: 'Signed', color: 'success' },
+          { icon: 'fa-shield-halved', title: 'Insurance Certificate', status: 'Verified', color: 'success' },
+          { icon: 'fa-file-invoice', title: 'Lien Waiver (Phase 1)', status: 'Pending', color: 'neutral' },
+        ].map((item, i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', gap: '1rem',
+            padding: '0.75rem', borderRadius: '12px',
+            transition: 'background 0.2s',
+            cursor: 'pointer'
+          }}
+            className="hover:bg-stone-50"
+          >
+            <div style={{
+              width: '42px', height: '42px', borderRadius: '10px',
+              background: item.color === 'success' ? 'var(--success-100)' : 'var(--stone-100)',
+              color: item.color === 'success' ? 'var(--success-600)' : 'var(--stone-500)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '1.125rem'
+            }}>
+              <i className={`fa-solid ${item.icon}`}></i>
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontWeight: 600, fontSize: '0.9375rem', color: 'var(--stone-800)' }}>{item.title}</p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--stone-500)' }}>PDF • 2.4 MB</p>
+            </div>
+            <span className={`badge badge-${item.color}`}>{item.status}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ padding: '1rem 1.5rem', background: 'var(--stone-50)', borderTop: '1px solid var(--stone-100)', borderRadius: '0 0 16px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <i className="fa-solid fa-lock" style={{ color: 'var(--copper-500)' }}></i>
+          <p style={{ fontSize: '0.8125rem', color: 'var(--stone-600)', fontWeight: 500 }}>
+            Documents secured via <span style={{ color: 'var(--ink-900)', fontWeight: 700 }}>ChainSign™</span> ledger.
+          </p>
+        </div>
       </div>
     </div>
   );

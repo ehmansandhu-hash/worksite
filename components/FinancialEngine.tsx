@@ -16,70 +16,97 @@ export const FinancialEngine: React.FC<FinancialEngineProps> = ({ project, role,
   const inEscrow = project.milestones
     .filter(m => m.status === 'IN_ESCROW')
     .reduce((acc, m) => acc + m.amount, 0);
-  const pending = project.milestones
-    .filter(m => m.status === 'PENDING' || m.status === 'COMPLETED')
-    .reduce((acc, m) => acc + m.amount, 0);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 lg:p-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <h2 className="text-xl font-bold text-slate-800">Financial Ledger</h2>
-        <span className="px-3 py-1 bg-indigo-50 text-indigo-700 text-[10px] lg:text-xs font-semibold rounded-full uppercase tracking-wider">
-          Total Project: ${project.totalBudget.toLocaleString()}
-        </span>
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-8">
-        <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
-          <p className="text-[10px] text-emerald-600 font-medium uppercase mb-1">Paid Out</p>
-          <p className="text-lg lg:text-2xl font-bold text-emerald-700">${totalPaid.toLocaleString()}</p>
+    <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
+      <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--stone-100)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="section-header" style={{ marginBottom: 0 }}>
+          <div className="accent-bar"></div>
+          <h2>Financial Ledger</h2>
         </div>
-        <div className="bg-amber-50 p-4 rounded-lg border border-amber-100">
-          <p className="text-[10px] text-amber-600 font-medium uppercase mb-1">In Escrow</p>
-          <p className="text-lg lg:text-2xl font-bold text-amber-700">${inEscrow.toLocaleString()}</p>
-        </div>
-        <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-          <p className="text-[10px] text-slate-500 font-medium uppercase mb-1">Worksite Fee</p>
-          <p className="text-lg lg:text-2xl font-bold text-slate-700">${commission.toLocaleString()}</p>
-        </div>
-        <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
-          <p className="text-[10px] text-indigo-600 font-medium uppercase mb-1">Remaining</p>
-          <p className="text-lg lg:text-2xl font-bold text-indigo-700">${pending.toLocaleString()}</p>
+        <div style={{ textAlign: 'right' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--stone-400)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Project Value</p>
+          <p style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontSize: '1.5rem', fontWeight: 700, color: 'var(--ink-900)', lineHeight: 1 }}>
+            ${project.totalBudget.toLocaleString()}
+          </p>
         </div>
       </div>
 
-      <div className="space-y-4">
-        <h3 className="text-sm font-semibold text-slate-500 uppercase">Milestones</h3>
-        {project.milestones.map((milestone) => (
-          <div key={milestone.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200 gap-4">
-            <div>
-              <p className="font-semibold text-slate-800 text-sm lg:text-base">{milestone.title}</p>
-              <p className="text-xs text-slate-500">Due: {milestone.dueDate}</p>
-            </div>
-            <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0">
-              <span className="text-base lg:text-lg font-bold text-slate-700">${milestone.amount.toLocaleString()}</span>
-              <div className="flex items-center gap-2">
-                {milestone.status === 'RELEASED' ? (
-                  <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold">RELEASED</span>
-                ) : milestone.status === 'IN_ESCROW' ? (
-                  <div className="flex items-center gap-2">
-                    <span className="hidden sm:inline px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-[10px] font-bold">SECURED</span>
-                    {role === 'HOMEOWNER' && (
-                      <button 
-                        onClick={() => onApproveMilestone(milestone.id)}
-                        className="px-3 py-1 bg-indigo-600 text-white rounded-full text-[10px] font-bold hover:bg-indigo-700 transition whitespace-nowrap"
-                      >
-                        Release Funds
-                      </button>
-                    )}
-                  </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', background: 'var(--stone-50)' }}>
+        <div style={{ padding: '1.5rem', borderRight: '1px solid var(--stone-200)' }}>
+          <p style={{ fontSize: '0.8125rem', color: 'var(--stone-500)', fontWeight: 500, marginBottom: '0.5rem' }}>Paid to Date</p>
+          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--stone-900)' }}>${totalPaid.toLocaleString()}</p>
+        </div>
+        <div style={{ padding: '1.5rem', borderRight: '1px solid var(--stone-200)' }}>
+          <p style={{ fontSize: '0.8125rem', color: 'var(--stone-500)', fontWeight: 500, marginBottom: '0.5rem' }}>Secured in Escrow</p>
+          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--copper-600)' }}>${inEscrow.toLocaleString()}</p>
+        </div>
+        <div style={{ padding: '1.5rem' }}>
+          <p style={{ fontSize: '0.8125rem', color: 'var(--stone-500)', fontWeight: 500, marginBottom: '0.5rem' }}>Worksite Fee (5%)</p>
+          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--stone-400)' }}>${commission.toLocaleString()}</p>
+        </div>
+      </div>
+
+      <div style={{ padding: '1.5rem' }}>
+        <h4 style={{ fontSize: '0.875rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--stone-900)', marginBottom: '1rem', letterSpacing: '0.02em' }}>Milestone Progress</h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {project.milestones.map((milestone, index) => (
+            <div
+              key={milestone.id}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '1rem 1.25rem',
+                background: 'var(--white)',
+                border: '1px solid var(--stone-200)',
+                borderRadius: '12px',
+                transition: 'all 0.2s',
+                opacity: milestone.status === 'PENDING' ? 0.7 : 1
+              }}
+            >
+              <div style={{
+                width: '32px', height: '32px', borderRadius: '50%',
+                background: milestone.status === 'RELEASED' ? 'var(--success-100)' : 'var(--stone-100)',
+                color: milestone.status === 'RELEASED' ? 'var(--success-600)' : 'var(--stone-500)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 700, marginRight: '1rem', fontSize: '0.875rem'
+              }}>
+                {milestone.status === 'RELEASED' ? <i className="fa-solid fa-check"></i> : index + 1}
+              </div>
+
+              <div style={{ flex: 1 }}>
+                <p style={{ fontWeight: 600, color: 'var(--ink-900)' }}>{milestone.title}</p>
+                <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8125rem', color: 'var(--stone-500)', marginTop: '0.125rem' }}>
+                  <span><i className="fa-regular fa-calendar" style={{ marginRight: '0.375rem' }}></i>{milestone.dueDate}</span>
+                </div>
+              </div>
+
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ fontWeight: 700, color: 'var(--ink-900)', fontSize: '1rem' }}>${milestone.amount.toLocaleString()}</p>
+                {milestone.status === 'IN_ESCROW' ? (
+                  role === 'HOMEOWNER' ? (
+                    <button
+                      onClick={() => onApproveMilestone(milestone.id)}
+                      className="btn btn-primary"
+                      style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem', marginTop: '0.25rem', height: 'auto' }}
+                    >
+                      Release Funds
+                    </button>
+                  ) : (
+                    <span className="badge badge-copper" style={{ marginTop: '0.25rem', display: 'inline-block' }}>Secured</span>
+                  )
                 ) : (
-                  <span className="px-3 py-1 bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase">{milestone.status}</span>
+                  <span
+                    className={milestone.status === 'RELEASED' ? 'badge badge-success' : 'badge badge-neutral'}
+                    style={{ marginTop: '0.25rem', display: 'inline-block' }}
+                  >
+                    {milestone.status === 'RELEASED' ? 'Paid' : 'Pending'}
+                  </span>
                 )}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

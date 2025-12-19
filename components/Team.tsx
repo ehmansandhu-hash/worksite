@@ -9,49 +9,79 @@ interface TeamProps {
 
 export const Team: React.FC<TeamProps> = ({ role }) => {
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="animate-enter delay-100" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div className="section-header">
+        <div className="accent-bar"></div>
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Project Crew</h2>
-          <p className="text-slate-500">Manage access and track who is currently on-site.</p>
+          <h2>Project Team</h2>
+          <p style={{ fontSize: '0.9375rem', color: 'var(--stone-500)' }}>Manage onsite personnel and permissions.</p>
         </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        {MOCK_TEAM.map((member, idx) => (
+          <div key={member.id} className={`card animate-enter delay-${(idx % 4) + 1}00`} style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ position: 'relative' }}>
+              <img src={member.avatar} alt={member.name} style={{ width: '60px', height: '60px', borderRadius: '16px', border: '1px solid var(--stone-200)', objectFit: 'cover' }} />
+              <div style={{ position: 'absolute', bottom: '-4px', right: '-4px', background: 'var(--white)', padding: '2px', borderRadius: '50%' }}>
+                <div style={{
+                  width: '12px', height: '12px', borderRadius: '50%',
+                  background: member.status === 'ON_SITE' ? 'var(--success-600)' : 'var(--stone-400)',
+                  border: '2px solid white'
+                }}></div>
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <h4 style={{ fontWeight: 600, fontSize: '1rem', color: 'var(--ink-900)' }}>{member.name}</h4>
+              <p style={{ fontSize: '0.8125rem', color: 'var(--copper-600)', fontWeight: 500, marginBottom: '0.375rem' }}>{member.role}</p>
+              <span className={member.status === 'ON_SITE' ? 'badge badge-success' : 'badge badge-neutral'}>
+                {member.status.replace('_', ' ')}
+              </span>
+            </div>
+            <button className="btn btn-secondary" style={{ width: '40px', height: '40px', borderRadius: '50%', padding: 0, justifyContent: 'center' }}>
+              <i className="fa-solid fa-phone"></i>
+            </button>
+          </div>
+        ))}
+
         {role === 'CONTRACTOR' && (
-          <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-indigo-200">
-            <i className="fa-solid fa-user-plus mr-2"></i> Add Sub-Contractor
+          <button className="card" style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            border: '2px dashed var(--stone-300)', boxShadow: 'none', background: 'transparent',
+            cursor: 'pointer', height: '100%', minHeight: '120px'
+          }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--stone-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem', color: 'var(--stone-500)' }}>
+              <i className="fa-solid fa-plus"></i>
+            </div>
+            <span style={{ fontWeight: 600, color: 'var(--stone-600)' }}>Add Member</span>
           </button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_TEAM.map(member => (
-          <div key={member.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex items-center gap-4 hover:border-indigo-300 transition group">
-            <div className="relative">
-              <img src={member.avatar} alt={member.name} className="w-16 h-16 rounded-full border-2 border-white shadow-sm" />
-              <span className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${member.status === 'ON_SITE' ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
-            </div>
-            <div className="flex-1">
-              <h4 className="font-bold text-slate-900 group-hover:text-indigo-600 transition">{member.name}</h4>
-              <p className="text-xs text-slate-500 font-medium">{member.role}</p>
-              <div className="mt-2 flex items-center gap-2">
-                <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded ${member.status === 'ON_SITE' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-                  {member.status.replace('_', ' ')}
-                </span>
-              </div>
-            </div>
-            <button className="w-10 h-10 rounded-full bg-slate-50 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition">
-              <i className="fa-solid fa-phone-flip text-xs"></i>
-            </button>
+      <div style={{
+        background: 'var(--stone-900)', borderRadius: '16px', padding: '2rem',
+        position: 'relative', overflow: 'hidden', color: 'white',
+        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.2)'
+      }}>
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
+          <div>
+            <h3 style={{ fontSize: '1.25rem', color: 'white', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <i className="fa-solid fa-satellite-dish" style={{ color: 'var(--copper-500)' }}></i>
+              Turnstile™ Monitoring
+            </h3>
+            <p style={{ color: 'var(--stone-400)', maxWidth: '500px', lineHeight: 1.6 }}>
+              Real-time geofence logs verify crew hours automatically.
+            </p>
           </div>
-        ))}
-      </div>
-
-      <div className="bg-indigo-900 rounded-3xl p-8 text-white relative overflow-hidden">
-        <div className="relative z-10">
-          <h3 className="text-xl font-bold mb-2">Worksite Site-Watch™</h3>
-          <p className="text-indigo-200 text-sm max-w-md">Our geofencing technology automatically logs crew arrival and departure times for verified payroll and homeowner peace of mind.</p>
-          <button className="mt-6 px-6 py-2.5 bg-white text-indigo-900 rounded-xl font-bold text-sm">View Access Logs</button>
+          <button className="btn btn-primary">View Logs</button>
         </div>
-        <i className="fa-solid fa-clock-rotate-left absolute -right-10 -bottom-10 text-[180px] text-white/5 pointer-events-none"></i>
+
+        {/* Abstract background graphic */}
+        <div style={{
+          position: 'absolute', top: 0, right: 0, bottom: 0, width: '300px',
+          background: 'linear-gradient(90deg, transparent, rgba(234, 88, 12, 0.05))',
+          pointerEvents: 'none'
+        }}></div>
       </div>
     </div>
   );
